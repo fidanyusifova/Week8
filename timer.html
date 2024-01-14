@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            margin: 50px;
+            background-color: #f4f4f4;
+        }
+
+        #timer {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        #timeInput, #startButton, #resetButton {
+            font-size: 1em;
+            padding: 10px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #timeInput {
+            width: 60px;
+        }
+
+        #startButton {
+            background-color: #4caf50;
+            color: #fff;
+        }
+
+        #resetButton {
+            background-color: #f44336;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <div>
+        <label for="timeInput">Set Time (seconds): </label>
+        <input type="number" id="timeInput" min="1" step="1" value="60">
+        <button id="startButton" onclick="startTimer()">Start</button>
+        <button id="resetButton" onclick="resetTimer()">Reset</button>
+    </div>
+
+    <div id="timer">00:00</div>
+
+    <script>
+        let timer;
+        let timeLeft;
+
+        function startTimer() {
+            const inputElement = document.getElementById('timeInput');
+            timeLeft = parseInt(inputElement.value);
+
+            if (isNaN(timeLeft) || timeLeft <= 0) {
+                alert("Please enter a valid time greater than 0 seconds.");
+                return;
+            }
+
+            disableInputs(true);
+
+            timer = setInterval(function() {
+                updateTimerDisplay();
+                timeLeft--;
+
+                if (timeLeft < 0) {
+                    clearInterval(timer);
+                    alert("Time's up!");
+                    resetTimer();
+                }
+            }, 1000);
+        }
+
+        function resetTimer() {
+            clearInterval(timer);
+            timeLeft = 0;
+            updateTimerDisplay();
+            disableInputs(false);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            const timerDisplay = document.getElementById('timer');
+            timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function disableInputs(disabled) {
+            document.getElementById('timeInput').disabled = disabled;
+            document.getElementById('startButton').disabled = disabled;
+            document.getElementById('resetButton').disabled = !disabled;
+        }
+    </script>
+
+</body>
+</html>
